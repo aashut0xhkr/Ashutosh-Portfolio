@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashutosh Kumar — Java Backend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --surface:#131B2E;
+    --surface-2:#182238;
+    --border:#22304A;
+    --text:#E7ECF5;
+    --muted:#8B99B3;
+    --amber:#E8A33D;
+    --teal:#4FD1C5;
+    --miss:#E8615C;
+    --mono:'JetBrains Mono', monospace;
+    --sans:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size:48px 48px;
+    pointer-events:none;
+    z-index:0;
+  }
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,18,32,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .logo{
+    font-family:var(--mono); font-weight:700; font-size:15px;
+    color:var(--amber); letter-spacing:0.5px;
+  }
+  .logo span{color:var(--text);}
+  .nav-links{display:flex; gap:28px; font-family:var(--mono); font-size:13px;}
+  .nav-links a{color:var(--muted); transition:color .2s; position:relative;}
+  .nav-links a:hover, .nav-links a.active{color:var(--teal);}
+  .nav-links a.active::after{
+    content:''; position:absolute; left:0; right:0; bottom:-20px; height:2px; background:var(--teal);
+  }
+  .nav-cta{
+    font-family:var(--mono); font-size:12px; padding:7px 14px;
+    border:1px solid var(--amber); border-radius:3px; color:var(--amber);
+    transition:all .2s;
+  }
+  .nav-cta:hover{background:var(--amber); color:var(--bg);}
+  @media (max-width:720px){ .nav-links{display:none;} }
+
+  /* HERO */
+  .hero{
+    position:relative; z-index:1;
+    padding:72px 0 40px;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; color:var(--teal);
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:''; width:8px; height:8px; border-radius:50%; background:var(--teal);
+    box-shadow:0 0 12px var(--teal); animation:pulse 2s infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  h1{
+    font-family:var(--sans); font-weight:800; font-size:clamp(34px,6vw,58px);
+    line-height:1.05; letter-spacing:-1px; margin-bottom:16px;
+  }
+  h1 .accent{color:var(--amber);}
+  .role{
+    font-family:var(--mono); font-size:clamp(15px,2.4vw,19px); color:var(--muted);
+    margin-bottom:22px;
+  }
+  .summary{
+    max-width:640px; color:#B8C2D6; font-size:16px; margin-bottom:30px;
+  }
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:52px;}
+  .btn{
+    font-family:var(--mono); font-size:13px; padding:11px 20px; border-radius:3px;
+    display:inline-flex; align-items:center; gap:8px; transition:all .2s; border:1px solid transparent;
+  }
+  .btn-primary{background:var(--amber); color:#1a1206; font-weight:600;}
+  .btn-primary:hover{background:#f2b558; transform:translateY(-1px);}
+  .btn-outline{border-color:var(--border); color:var(--text);}
+  .btn-outline:hover{border-color:var(--teal); color:var(--teal);}
+
+  /* DIAGRAM */
+  .diagram-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:28px 24px 20px; position:relative; overflow:hidden;
+  }
+  .diagram-head{
+    display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; flex-wrap:wrap; gap:8px;
+  }
+  .diagram-title{font-family:var(--mono); font-size:13px; color:var(--text); font-weight:600;}
+  .diagram-caption{font-family:var(--mono); font-size:11.5px; color:var(--muted);}
+  .legend{display:flex; gap:18px; margin-top:14px; flex-wrap:wrap;}
+  .legend-item{display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted);}
+  .dot{width:9px; height:9px; border-radius:50%;}
+  .dot-hit{background:var(--teal); box-shadow:0 0 8px var(--teal);}
+  .dot-miss{background:var(--miss); box-shadow:0 0 8px var(--miss);}
+  #flowSvg{width:100%; height:auto; display:block; margin-top:8px;}
+  .node-label{font-family:var(--mono); font-size:11px; fill:var(--muted);}
+  .node-sub{font-family:var(--mono); font-size:9.5px; fill:#5c6b87;}
+  .status-line{
+    margin-top:16px; font-family:var(--mono); font-size:12px; color:var(--muted);
+    min-height:18px; transition:color .2s;
+  }
+  .status-line b{color:var(--teal);}
+  .status-line.miss b{color:var(--miss);}
+
+  /* STATS */
+  .stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border); border-radius:10px;
+    overflow:hidden; margin-top:24px;
+  }
+  .stat{background:var(--surface); padding:20px 16px;}
+  .stat-num{font-family:var(--mono); font-size:24px; font-weight:700; color:var(--amber);}
+  .stat-label{font-family:var(--mono); font-size:10.5px; color:var(--muted); margin-top:4px; letter-spacing:0.3px;}
+  @media (max-width:640px){ .stats{grid-template-columns:1fr 1fr;} }
+
+  /* SECTION generic */
+  section{position:relative; z-index:1; padding:64px 0;}
+  .section-head{margin-bottom:36px;}
+  .section-eyebrow{
+    font-family:var(--mono); font-size:11.5px; color:var(--teal); letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:8px;
+  }
+  .section-title{font-family:var(--sans); font-weight:800; font-size:clamp(24px,3.4vw,32px);}
+
+  /* EXPERIENCE — pipeline */
+  .pipeline{position:relative; padding-left:28px;}
+  .pipeline::before{
+    content:''; position:absolute; left:6px; top:8px; bottom:8px; width:2px;
+    background:linear-gradient(var(--teal), var(--border));
+  }
+  .stage{position:relative; padding-bottom:40px;}
+  .stage:last-child{padding-bottom:0;}
+  .stage-dot{
+    position:absolute; left:-28px; top:4px; width:14px; height:14px; border-radius:50%;
+    background:var(--surface); border:2px solid var(--teal); z-index:2;
+  }
+  .stage:first-child .stage-dot{background:var(--teal); box-shadow:0 0 10px var(--teal);}
+  .stage-head{display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:4px;}
+  .stage-role{font-weight:700; font-size:17px;}
+  .stage-dates{font-family:var(--mono); font-size:11.5px; color:var(--muted); white-space:nowrap;}
+  .stage-company{font-family:var(--mono); font-size:13px; color:var(--amber); margin-bottom:12px;}
+  .stage-bullets{list-style:none;}
+  .stage-bullets li{
+    font-size:14.5px; color:#B8C2D6; padding-left:18px; position:relative; margin-bottom:8px;
+  }
+  .stage-bullets li::before{
+    content:'→'; position:absolute; left:0; color:var(--teal); font-family:var(--mono);
+  }
+  .stage-bullets b{color:var(--text);}
+
+  /* PROJECTS */
+  .projects-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:720px){.projects-grid{grid-template-columns:1fr;}}
+  .project-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px;
+    transition:border-color .2s, transform .2s;
+  }
+  .project-card:hover{border-color:var(--teal); transform:translateY(-3px);}
+  .project-title{font-weight:700; font-size:17px; margin-bottom:10px;}
+  .project-desc{font-size:14px; color:#B8C2D6; margin-bottom:16px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag{
+    font-family:var(--mono); font-size:10.5px; padding:4px 9px; border-radius:20px;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--muted);
+  }
+
+  /* SKILLS */
+  .skills-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media (max-width:820px){.skills-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.skills-grid{grid-template-columns:1fr;}}
+  .skill-group{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px;}
+  .skill-group-title{font-family:var(--mono); font-size:11px; color:var(--amber); letter-spacing:1px; text-transform:uppercase; margin-bottom:12px;}
+  .skill-chips{display:flex; flex-wrap:wrap; gap:6px;}
+  .chip{
+    font-size:12.5px; padding:5px 10px; border-radius:5px; background:var(--surface-2);
+    border:1px solid var(--border); color:var(--text); transition:all .15s; cursor:default;
+  }
+  .chip:hover{border-color:var(--teal); color:var(--teal);}
+
+  /* EDUCATION + FOOTER */
+  .edu-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  }
+  .edu-name{font-weight:700; font-size:16px;}
+  .edu-sub{font-family:var(--mono); font-size:12.5px; color:var(--muted); margin-top:4px;}
+  .edu-grade{font-family:var(--mono); font-size:20px; color:var(--amber); font-weight:700;}
+
+  footer{
+    position:relative; z-index:1; border-top:1px solid var(--border); padding:40px 0 32px;
+    text-align:center;
+  }
+  .footer-links{display:flex; justify-content:center; gap:22px; font-family:var(--mono); font-size:13px; margin-bottom:14px; flex-wrap:wrap;}
+  .footer-links a{color:var(--muted); transition:color .2s;}
+  .footer-links a:hover{color:var(--teal);}
+  .footer-note{font-family:var(--mono); font-size:11px; color:#4d5a72;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">AK</div>
+    <div class="nav-links">
+      <a href="#experience" class="navlink">experience</a>
+      <a href="#projects" class="navlink">projects</a>
+      <a href="#skills" class="navlink">skills</a>
+      <a href="#education" class="navlink">education</a>
+    </div>
+    <a class="nav-cta" href="mailto:aashut0xh@gmail.com">say hi ↗</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">available for backend engineering roles</div>
+    <h1>Ashutosh Kumar<br><span class="accent">builds backend systems</span> that don't fall over.</h1>
+    <div class="role">Java Backend Developer · Spring Boot · Distributed Caching · Microservices</div>
+    <p class="summary">4+ years designing and optimizing enterprise-grade applications with Java 8/17/21, Spring Boot, Oracle DB, MongoDB, Redis and Kafka. I spend most of my time on the tradeoff this diagram shows — deciding what should live in cache versus what should hit the database.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="mailto:aashut0xh@gmail.com">Email me</a>
+      <a class="btn btn-outline" href="https://linkedin.com/in/aashut0xh" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn btn-outline" href="tel:+918207654191">+91 8207654191</a>
+    </div>
+
+    <div class="diagram-card">
+      <div class="diagram-head">
+        <div class="diagram-title">// request lifecycle — juno distributed cache</div>
+        <div class="diagram-caption">bengaluru, india</div>
+      </div>
+      <div class="diagram-caption">a live look at the pattern behind a 400,000+ daily-call reduction on Oracle DB</div>
+      <svg id="flowSvg" viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg">
+        <!-- guide paths -->
+        <path d="M60,95 L190,95" stroke="#22304A" stroke-width="1.5" fill="none"/>
+        <path d="M230,95 L340,95" stroke="#22304A" stroke-width="1.5" fill="none"/>
+        <path id="hitPath" d="M370,95 Q 470,40 560,95" stroke="#22304A" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+        <path id="missPathDown" d="M360,110 Q 400,165 460,165" stroke="#22304A" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+        <path id="missPathUp" d="M460,165 Q 520,165 560,110" stroke="#22304A" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+        <path d="M590,95 L650,95" stroke="#22304A" stroke-width="1.5" fill="none"/>
+
+        <!-- nodes -->
+        <g id="node-client">
+          <rect x="20" y="78" width="70" height="34" rx="6" fill="#182238" stroke="#22304A"/>
+          <text x="55" y="99" text-anchor="middle" class="node-label">CLIENT</text>
+        </g>
+        <g id="node-gateway">
+          <rect x="195" y="78" width="90" height="34" rx="6" fill="#182238" stroke="#22304A"/>
+          <text x="240" y="97" text-anchor="middle" class="node-label">API GATEWAY</text>
+          <text x="240" y="107" text-anchor="middle" class="node-sub">spring boot</text>
+        </g>
+        <g id="node-cache">
+          <rect x="345" y="72" width="90" height="46" rx="6" fill="#1b2a24" stroke="var(--teal)"/>
+          <text x="390" y="93" text-anchor="middle" class="node-label" fill="#9fe8dd">JUNO CACHE</text>
+          <text x="390" y="106" text-anchor="middle" class="node-sub">redis-backed</text>
+        </g>
+        <g id="node-db">
+          <rect x="415" y="148" width="90" height="34" rx="6" fill="#2a1e14" stroke="var(--amber)"/>
+          <text x="460" y="169" text-anchor="middle" class="node-label" fill="#f2c98a">ORACLE DB</text>
+        </g>
+        <g id="node-response">
+          <rect x="565" y="78" width="80" height="34" rx="6" fill="#182238" stroke="#22304A"/>
+          <text x="605" y="99" text-anchor="middle" class="node-label">RESPONSE</text>
+        </g>
+
+        <circle id="packet" cx="55" cy="95" r="6" fill="var(--teal)" style="filter:drop-shadow(0 0 6px var(--teal));"/>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><span class="dot dot-hit"></span> cache hit — served in-memory, no DB round trip</div>
+        <div class="legend-item"><span class="dot dot-miss"></span> cache miss — falls through to Oracle, result re-cached</div>
+      </div>
+      <div class="status-line" id="statusLine">initializing…</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num">400K+</div><div class="stat-label">DAILY DB CALLS CUT</div></div>
+      <div class="stat"><div class="stat-num">60%</div><div class="stat-label">FASTER DATA RETRIEVAL</div></div>
+      <div class="stat"><div class="stat-num">40%</div><div class="stat-label">RESPONSE TIME REDUCED</div></div>
+      <div class="stat"><div class="stat-num">95%</div><div class="stat-label">SONARQUBE COVERAGE</div></div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="section-head">
+      <div class="section-eyebrow">// 04 years in production</div>
+      <h2 class="section-title">Experience</h2>
+    </div>
+    <div class="pipeline">
+      <div class="stage">
+        <div class="stage-dot"></div>
+        <div class="stage-head">
+          <div class="stage-role">Java Developer</div>
+          <div class="stage-dates">Dec 2025 — Present</div>
+        </div>
+        <div class="stage-company">Tata Consultancy Services · Bengaluru, India</div>
+        <ul class="stage-bullets">
+          <li><b>Distributed caching:</b> designed and implemented Juno distributed caching, reducing 400,000+ daily Oracle DB calls and improving performance.</li>
+          <li><b>Notification integration:</b> integrated the Notification Service and maintained Kafka/AMQ-based preference-change event publishing.</li>
+          <li><b>Code quality:</b> lifted SonarQube coverage from 85.2% to nearly 95% through JaCoCo and Maven optimization.</li>
+          <li><b>CI/CD:</b> configured and monitored Harness pipelines across Dev, QA and Staging.</li>
+          <li><b>Production support:</b> led incident triage, root-cause analysis and merchant issue resolution within SLA.</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <div class="stage-dot"></div>
+        <div class="stage-head">
+          <div class="stage-role">Software Engineer</div>
+          <div class="stage-dates">Jul 2025 — Oct 2025</div>
+        </div>
+        <div class="stage-company">Ciklum · Bengaluru, India</div>
+        <ul class="stage-bullets">
+          <li><b>MongoDB optimization:</b> optimized aggregation pipelines, improving API performance and reducing response latency.</li>
+          <li><b>System integration:</b> resolved XML generation and downstream integration issues.</li>
+          <li><b>Deployment automation:</b> shipped releases via Helm Charts and Argo CD.</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <div class="stage-dot"></div>
+        <div class="stage-head">
+          <div class="stage-role">Java Developer</div>
+          <div class="stage-dates">Apr 2022 — Jul 2025</div>
+        </div>
+        <div class="stage-company">Microland · Bengaluru, India</div>
+        <ul class="stage-bullets">
+          <li><b>Performance:</b> cut response time by 40% through SQL and JPA Criteria optimization.</li>
+          <li><b>Caching:</b> implemented Redis caching, improving data retrieval performance by 60%.</li>
+          <li><b>REST APIs:</b> built services with Spring Boot and Spring Data JPA.</li>
+          <li><b>Microservices:</b> integrated Eureka Server and API Gateway for service discovery and routing.</li>
+          <li><b>CI/CD:</b> automated deployments with Jenkins and resolved production issues.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head">
+      <div class="section-eyebrow">// selected builds</div>
+      <h2 class="section-title">Key Projects</h2>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-title">Merchant Settings Service</div>
+        <p class="project-desc">A high-traffic microservice that cut 400,000+ daily Oracle DB calls through distributed caching and lifted SonarQube coverage from 85.2% to 95%.</p>
+        <div class="tag-row">
+          <span class="tag">Java 21</span><span class="tag">Oracle DB</span><span class="tag">Juno Cache</span>
+          <span class="tag">Kafka</span><span class="tag">AMQ</span><span class="tag">Harness CI/CD</span>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-title">Opus Modernization</div>
+        <p class="project-desc">Modernized legacy applications into scalable microservices, optimizing aggregation pipelines and enhancing code quality through SonarQube remediation.</p>
+        <div class="tag-row">
+          <span class="tag">Java 17</span><span class="tag">Spring Boot</span><span class="tag">MongoDB</span>
+          <span class="tag">Redis</span><span class="tag">Helm</span><span class="tag">Argo CD</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-head">
+      <div class="section-eyebrow">// toolbox</div>
+      <h2 class="section-title">Technical Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-chips"><span class="chip">Java 8/17/21</span><span class="chip">Core Java</span><span class="chip">SQL</span><span class="chip">JPQL</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Frameworks</div>
+        <div class="skill-chips"><span class="chip">Spring Boot</span><span class="chip">Spring MVC</span><span class="chip">Spring Security</span><span class="chip">Hibernate</span><span class="chip">JPA</span><span class="chip">Microservices</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Databases</div>
+        <div class="skill-chips"><span class="chip">Oracle DB</span><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">MongoDB</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Caching &amp; Messaging</div>
+        <div class="skill-chips"><span class="chip">Redis</span><span class="chip">Juno Cache</span><span class="chip">Apache Kafka</span><span class="chip">ActiveMQ</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">CI/CD &amp; Quality</div>
+        <div class="skill-chips"><span class="chip">Jenkins</span><span class="chip">Harness CI/CD</span><span class="chip">Helm</span><span class="chip">Argo CD</span><span class="chip">SonarQube</span><span class="chip">JaCoCo</span><span class="chip">Cobertura</span></div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools &amp; AI</div>
+        <div class="skill-chips"><span class="chip">Git</span><span class="chip">IntelliJ IDEA</span><span class="chip">Postman</span><span class="chip">Swagger</span><span class="chip">JIRA</span><span class="chip">Claude Code</span><span class="chip">GitHub Copilot</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="section-head">
+      <div class="section-eyebrow">// foundation</div>
+      <h2 class="section-title">Education</h2>
+    </div>
+    <div class="edu-card">
+      <div>
+        <div class="edu-name">Bachelor of Technology, Computer Science Engineering</div>
+        <div class="edu-sub">Bihar Engineering University · Patna, India</div>
+      </div>
+      <div class="edu-grade">7.84 <span style="font-size:12px;color:var(--muted);">CGPA</span></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="mailto:aashut0xh@gmail.com">aashut0xh@gmail.com</a>
+    <a href="tel:+918207654191">+91 8207654191</a>
+    <a href="https://linkedin.com/in/aashut0xh" target="_blank" rel="noopener">linkedin.com/in/aashut0xh</a>
+    <a href="#" onclick="return false;">Bengaluru, India</a>
+  </div>
+  <div class="footer-note">// built to show the work, not just list it</div>
+</footer>
+
+<script>
+  // active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navlinks = document.querySelectorAll('.navlink');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      const rect = s.getBoundingClientRect();
+      if(rect.top <= 120 && rect.bottom >= 120) current = s.id;
+    });
+    navlinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+  });
+
+  // ---- animated request flow diagram ----
+  const packet = document.getElementById('packet');
+  const statusLine = document.getElementById('statusLine');
+
+  function point(el, t){ return el.getPointAtLength(el.getTotalLength() * t); }
+
+  function lerpMove(el, x1,y1,x2,y2, duration){
+    return new Promise(resolve=>{
+      const start = performance.now();
+      function step(now){
+        const t = Math.min((now-start)/duration, 1);
+        const ease = t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+        el.setAttribute('cx', x1 + (x2-x1)*ease);
+        el.setAttribute('cy', y1 + (y2-y1)*ease);
+        if(t<1) requestAnimationFrame(step); else resolve();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  function movePath(el, pathEl, duration){
+    return new Promise(resolve=>{
+      const len = pathEl.getTotalLength();
+      const start = performance.now();
+      function step(now){
+        const t = Math.min((now-start)/duration, 1);
+        const p = pathEl.getPointAtLength(len*t);
+        el.setAttribute('cx', p.x);
+        el.setAttribute('cy', p.y);
+        if(t<1) requestAnimationFrame(step); else resolve();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  async function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  const hitPath = document.getElementById('hitPath');
+  const missDown = document.getElementById('missPathDown');
+  const missUp = document.getElementById('missPathUp');
+
+  function setStatus(text, isMiss){
+    statusLine.innerHTML = text;
+    statusLine.classList.toggle('miss', !!isMiss);
+  }
+
+  async function runCycle(){
+    packet.setAttribute('fill', 'var(--teal)');
+    packet.style.filter = 'drop-shadow(0 0 6px var(--teal))';
+    setStatus('client request received by <b>API Gateway</b>…');
+    await lerpMove(packet, 55,95, 55,95, 1); // reset
+    await lerpMove(packet, 55,95, 240,95, 550);
+    setStatus('checking <b>Juno Cache</b> for key…');
+    await lerpMove(packet, 240,95, 390,95, 500);
+
+    const isHit = Math.random() < 0.78; // ~cache hit ratio for demo
+
+    if(isHit){
+      setStatus('<b>cache hit</b> — served from memory, Oracle DB skipped');
+      await movePath(packet, hitPath, 700);
+    } else {
+      packet.setAttribute('fill', 'var(--amber)');
+      packet.style.filter = 'drop-shadow(0 0 6px var(--amber))';
+      setStatus('cache miss — falling through to <b>Oracle DB</b>…', true);
+      await movePath(packet, missDown, 550);
+      await wait(180);
+      setStatus('result written back to cache, returning…', true);
+      await movePath(packet, missUp, 550);
+      packet.setAttribute('fill', 'var(--teal)');
+      packet.style.filter = 'drop-shadow(0 0 6px var(--teal))';
+    }
+
+    await lerpMove(packet, 560,95, 605,95, 400);
+    setStatus(isHit ? '<b>response sent</b> — round trip completed via cache' : '<b>response sent</b> — round trip completed via DB');
+    await wait(900);
+  }
+
+  async function loop(){
+    while(true){ await runCycle(); }
+  }
+  loop();
+</script>
+
+</body>
+</html>
